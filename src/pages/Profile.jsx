@@ -32,16 +32,7 @@ const Profile = () => {
     setUpdated(false);
 
     try {
-      // const response = await axios.put(
-      //   `http://localhost:8000/api/users/${user._id}`,
-      //   JSON.stringify({ username, email, password }), // Send the data as an object
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json', // Set the Content-Type header to application/json
-      //     },
-      //     withCredentials: true
-      //   }
-      // );
+    
       const response=await fetch(`/api/users/${user._id}`, {
         method: 'PUT',
         headers: {
