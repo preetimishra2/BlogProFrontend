@@ -33,34 +33,40 @@ const CreatePost = () => {
     }
 
     const handleCreate = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        if (!title || !desc) {
+            alert("Title and description are required.");
+            return;
+        }
+    
         const post = {
             title,
             desc,
             username: user.username,
             userId: user._id,
-            categories: cats
-        }
-
+            categories: cats,
+        };
+    
         if (file) {
             const data = new FormData();
-            data.append("file", file); // Aligns with backend multer field
+            data.append("file", file);
             try {
-                const imgUpload = await axios.post(`${URL}/api/upload`, data); // Ensure you are using the correct URL
-                post.photo = imgUpload.data; // Update this based on the response
+                const imgUpload = await axios.post(`${URL}/api/upload`, data);
+                post.photo = imgUpload.data || "default.jpg";
             } catch (err) {
-                console.log(err);
+                console.error("File upload failed:", err);
+                post.photo = "default.jpg"; // Fallback
             }
         }
-
-        // Post upload
+    
         try {
-            const res = await axios.post("/api/posts/create", post, { withCredentials: true })
-            navigate("/posts/post/" + res.data._id)
+            const res = await axios.post(`${URL}/api/posts/create`, post, { withCredentials: true });
+            navigate(`/posts/post/${res.data._id}`);
         } catch (err) {
-            console.log(err)
+            console.error("Error creating post:", err);
         }
-    }
+    };
+    
 
     return (
         <div>
