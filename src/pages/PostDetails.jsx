@@ -23,6 +23,10 @@ const PostDetails = () => {
 
   // Fetch post details
   const fetchPost = async () => {
+    if (!postId) {
+      console.error("Invalid postId. Cannot fetch post details.");
+      return;
+    }
     try {
       const res = await axios.get(`${URL}/api/posts/${postId}`);
       setPost(res.data);
@@ -33,6 +37,10 @@ const PostDetails = () => {
 
   // Fetch comments for the post
   const fetchComments = async () => {
+    if (!postId) {
+      console.error("Invalid postId. Cannot fetch comments.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await axios.get(`${URL}/api/comments/post/${postId}`);
