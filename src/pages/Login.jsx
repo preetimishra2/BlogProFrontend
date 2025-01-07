@@ -15,33 +15,36 @@ const Login = () => {
     try {
       const res = await fetch(`${URL}/api/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include", // Ensure cookies are sent with the request
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (res.ok) {
-        const data = await res.json(); // Extract JSON data
-        console.log("Login Response:", data);
-
-        if (data.user) {
-          setUser(data.user); // Update global context with user data
-          navigate("/"); // Redirect to home page
+        const data = await res.json(); // Parse response
+        console.log("API Response Data:", data);
+  
+        if (data._id) {
+          setError(""); // Clear previous errors
+          setUser(data); // Update global user context
+          console.log("User Context Updated:", data);
+          navigate("/"); // Redirect to homepage
         } else {
+          console.error("Invalid user data:", data);
           setError("Invalid response from server.");
         }
-      } else if (res.status === 401) {
-        setError("Invalid email or password."); // Handle unauthorized login
       } else {
-        setError("Failed to log in. Please try again.");
+        const errorMsg = res.status === 401 
+          ? "Invalid email or password." 
+          : "Failed to log in. Please try again.";
+        console.error("Login failed:", errorMsg);
+        setError(errorMsg);
       }
     } catch (err) {
       console.error("Error during login:", err);
       setError("An unexpected error occurred. Please try again later.");
     }
-  };
+  };  
 
   return (
     <>
